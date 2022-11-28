@@ -23,7 +23,7 @@ docker-compose up -d
 ### 3. Install python dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r requeriments.txt
 ```
 
 ### 4. Run the python script

@@ -74,7 +74,7 @@ class Insert_Data_Body(BaseModel):
 # Endpoint para crear las bases de datos
 @app.post("/create_databases")
 async def create_databases():
-    client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='_')
+    client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='test')
     for key in json_controllers_init.keys():
         for sensor in json_controllers_init[key]['sensors']:
             client.create_database(key + '_' + sensor)
@@ -82,34 +82,50 @@ async def create_databases():
             client.create_database(key + '_' + actuator)
     return {"message": "Databases created"}
 
+@app.post("/drop_databases")
+async def drop_databases():
+    client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='test')
+    for key in json_controllers_init.keys():
+        for sensor in json_controllers_init[key]['sensors']:
+            client.drop_database(key + '_' + sensor)
+        for actuator in json_controllers_init[key]['actuators']:
+            client.drop_database(key + '_' + actuator)
+    return {"message": "Databases dropped"}
+
 # Endpoint para insertar los datos
 @app.post("/insert_data")
 async def insert_data(body: Insert_Data_Body):
-    client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='_')
-    for key in body.dict().keys():
-        for sensor in json_controllers_init[key]['sensors']:
-            json_body = [
-                {
-                    "measurement": key + '_' + sensor['type'],
-                    "time": datetime.datetime.utcnow(),
-                    "fields": {
-                        "value": body.dict()[key][sensor]['current_value']
-                    }
-                }
-            ]
-            client.write_points(json_body, database=key + '_' + sensor['type'])
-        for actuator in json_controllers_init[key]['actuators']:
-            json_body = [
-                {
-                    "measurement": key + '_' + actuator['type'],
-                    "time": datetime.datetime.utcnow(),
-                    "fields": {
-                        "value": body.dict()[key][actuator]['current_value']
-                    }
-                }
-            ]
-            client.write_points(json_body, database=key + '_' + actuator['type'])
-    return {"message": "Data inserted"}
+    try:
+        client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='test')
+        for key in body.dict().keys():
+            if key!='group3':
+                
+                for sensor in body.dict()[key]['sensors']:
+                    json_body = [
+                        {
+                            "measurement": key + '_' + sensor['type'],
+                            "time": datetime.datetime.utcnow(),
+                            "fields": {
+                                "value": sensor['current_value']
+                            }
+                        }
+                    ]
+                    client.write_points(json_body)
+                for actuator in body.dict()[key]['actuators']:
+                    json_body = [
+                        {
+                            "measurement": key + '_' + actuator['type'],
+                            "time": datetime.datetime.utcnow(),
+                            "fields": {
+                                "value": actuator['current_value']
+                            }
+                        }
+                    ]
+                    client.write_points(json_body)
+        return {"message": "Data inserted"}
+    except Exception as e:
+        print(e)
+        return {"message": e}
 
 
 # Endpoints para pruebas
@@ -118,6 +134,12 @@ async def create_test():
     client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='test')
     client.create_database('test')
     return {"message": "Database created"}
+
+@app.post("/drop_test")
+async def drop_test():
+    client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='test')
+    client.drop_database('test')
+    return {"message": "Database dropped"}
 
 
 @app.post("/influx_test")
