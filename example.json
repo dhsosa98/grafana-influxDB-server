@@ -1,0 +1,117 @@
+{
+    "group1": {
+        "actuators": [{
+            "type": "led1",
+            "current_value": 1 
+        },
+            {
+            "type": "led2",
+            "current_value": 0
+            },
+            {
+            "type": "led3",
+            "current_value": 1
+            },
+            {
+            "type": "stepper",
+            "current_value": 10
+            }
+        ],
+        "sensors": [
+            {
+            "type": "temp1",
+            "current_value": 25
+            },
+            {
+            "type": "hum1",
+            "current_value": 50
+            }
+        ]
+    },
+    "group2": {
+        "actuators": [{
+            "type": "led1",
+            "current_value": 1 
+        },
+            {
+            "type": "led2",
+            "current_value": 0
+            },
+            {
+            "type": "led3",
+            "current_value": 1
+            },
+            {
+              "type": "led4",
+              "current_value": 0
+            },
+            {
+            "type": "led5",
+            "current_value": 0
+            },
+            {
+            "type": "rele",
+            "current_value": 0
+            }
+        ],
+        "sensors": [{
+          "type": "mic",
+          "current_value": 0
+        }]
+    },
+    "group3": {
+        "actuators": [],
+        "sensors": []
+    },
+    "group4": {
+        "actuators": [{
+          "type": "rele",
+          "current_value": 1
+        }],
+        "sensors": [{
+          "type": "proximity",
+          "current_value": 0
+        }]
+    },
+    "group5": {
+        "actuators": [{
+          "type": "stepper",
+          "current_value": 10
+        }],
+        "sensors": [{
+          "type": "fotorresistor",
+          "current_value": 0
+        }]
+    },
+    "group6": {
+        "actuators": [{
+          "type": "display",
+          "current_value": 1
+        },
+        {
+          "type": "ledRGB",
+          "current_value": 1
+        }, {
+          "type": "speaker",
+          "current_value": 1
+        }],
+        "sensors": [{
+          "type": "proximity",
+          "current_value": 0
+        }
+      ]
+    },
+    "group7": {
+        "actuators": [{
+          "type": "stepper",
+          "current_value": 10
+        }],
+        "sensors": [{
+          "type": "fotosensor",
+          "current_value": 0
+        }, {
+          "type": "joystick",
+          "current_value": 0
+        }]
+    }
+  }
