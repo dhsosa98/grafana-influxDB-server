@@ -37,14 +37,13 @@ json_controllers_init = {
             'mic',
         ],
     },
-    # todo: Falta agregar el resto de los grupos
     "group3": {
-        "actuators": [],
-        "sensors": [],
-    },
-    "group4": {
         "actuators": ['rele'],
         "sensors": ['proximity'],
+    },
+    "group4": {
+        "actuators": ['rele', 'speaker'],
+        "sensors": ['position_sensor'],
     },
     "group5": {
         "actuators": ['stepper'],
@@ -97,9 +96,7 @@ async def drop_databases():
 async def insert_data(body: Insert_Data_Body):
     try:
         client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='test')
-        for key in body.dict().keys():
-            if key!='group3':
-                
+        for key in body.dict().keys():                
                 for sensor in body.dict()[key]['sensors']:
                     json_body = [
                         {

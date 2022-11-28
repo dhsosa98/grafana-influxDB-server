@@ -59,11 +59,8 @@
           "current_value": 0
         }]
     },
+    
     "group3": {
-        "actuators": [],
-        "sensors": []
-    },
-    "group4": {
         "actuators": [{
           "type": "rele",
           "current_value": 1
@@ -73,6 +70,19 @@
           "current_value": 0
         }]
     },
+    "group4": {
+      "actuators": [{
+        "type": "rele",
+        "current_value": 1
+      },{
+        "type": "speaker",
+        "current_value": 0
+      }],
+      "sensors": [{
+        "type": "position_sensor",
+        "current_value": 0
+      }]
+  },
     "group5": {
         "actuators": [{
           "type": "stepper",
