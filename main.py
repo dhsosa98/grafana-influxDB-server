@@ -90,25 +90,25 @@ async def insert_data(body: Insert_Data_Body):
         for sensor in json_controllers_init[key]['sensors']:
             json_body = [
                 {
-                    "measurement": key + '_' + sensor,
+                    "measurement": key + '_' + sensor['type'],
                     "time": datetime.datetime.utcnow(),
                     "fields": {
-                        "value": body.dict()[key][sensor]
+                        "value": body.dict()[key][sensor]['current_value']
                     }
                 }
             ]
-            client.write_points(json_body, database=key + '_' + sensor)
+            client.write_points(json_body, database=key + '_' + sensor['type'])
         for actuator in json_controllers_init[key]['actuators']:
             json_body = [
                 {
-                    "measurement": key + '_' + actuator,
+                    "measurement": key + '_' + actuator['type'],
                     "time": datetime.datetime.utcnow(),
                     "fields": {
-                        "value": body.dict()[key][actuator]
+                        "value": body.dict()[key][actuator]['current_value']
                     }
                 }
             ]
-            client.write_points(json_body, database=key + '_' + actuator)
+            client.write_points(json_body, database=key + '_' + actuator['type'])
     return {"message": "Data inserted"}
 
 
