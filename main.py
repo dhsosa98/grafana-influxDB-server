@@ -4,6 +4,7 @@ from influxdb import InfluxDBClient
 import datetime
 from pydantic import BaseModel
 import random
+from typing import Optional
 
 app = FastAPI()
 
@@ -38,8 +39,8 @@ json_controllers_init = {
         ],
     },
     "group3": {
-        "actuators": ['rele'],
-        "sensors": ['proximity'],
+        "actuators": ['relay'],
+        "sensors": ['hall'],
     },
     "group4": {
         "actuators": ['rele', 'speaker'],
@@ -61,13 +62,13 @@ json_controllers_init = {
 }
 
 class Insert_Data_Body(BaseModel):
-    group1: dict
-    group2: dict
-    group3: dict
-    group4: dict
-    group5: dict
-    group6: dict
-    group7: dict
+    group1: Optional[dict]
+    group2: Optional[dict]
+    group3: Optional[dict]
+    group4: Optional[dict]
+    group5: Optional[dict]
+    group6: Optional[dict]
+    group7: Optional[dict]
 
 
 # Endpoint para crear las bases de datos
@@ -83,20 +84,28 @@ async def create_databases():
 
 @app.post("/drop_databases")
 async def drop_databases():
-    client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='test')
-    for key in json_controllers_init.keys():
-        for sensor in json_controllers_init[key]['sensors']:
-            client.drop_database(key + '_' + sensor)
-        for actuator in json_controllers_init[key]['actuators']:
-            client.drop_database(key + '_' + actuator)
-    return {"message": "Databases dropped"}
+    try:
+        client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='test')
+        for key in json_controllers_init.keys():
+            for sensor in json_controllers_init[key]['sensors']:
+                client.drop_database(key + '_' + sensor)
+            for actuator in json_controllers_init[key]['actuators']:
+                client.drop_database(key + '_' + actuator)
+        return {"message": "Databases dropped"}
+    except Exception as e:
+        return {"message": "Error: " + str(e)}
+
 
 # Endpoint para insertar los datos
 @app.post("/insert_data")
 async def insert_data(body: Insert_Data_Body):
     try:
+        print(body)
         client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin123', database='test')
-        for key in body.dict().keys():                
+        if (len(body.dict().keys())==0):
+            return {"message": "No data to insert"}
+        for key in body.dict().keys():
+            if body.dict()[key] is not None:                
                 for sensor in body.dict()[key]['sensors']:
                     json_body = [
                         {
